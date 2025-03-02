@@ -1,0 +1,9 @@
+flowchart TD
+    A[Interface do Usuário] --> |Envia solicitação de crédito/débito para o serviço de Controle de Lançamentos| B[Valida a solicitação]
+    B --> C{É válida?}
+    C -->|Não| H[Retorna o erro para o usuário]
+    C -->|Sim| D[Publica um evento de transação de crédito/débito em um tópico]
+    D --> E[Serviço de Saldo Consolidado consome evento de transação de crédito/débito]
+    E --> F[Atualiza a base de dados]
+    F --> G[Atualiza o cache]
+    G --> I[Informa o usuário que o crédito/débito foi registrado]
