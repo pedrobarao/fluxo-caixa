@@ -15,7 +15,6 @@ builder.Services.RegisterServices(builder.Configuration);
 builder.Services.AddEndpointsApiExplorer();
 var withApiVersioning = builder.Services.AddApiVersioning();
 builder.AddDefaultOpenApiConfig(withApiVersioning);
-builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly);
 
 var app = builder.Build();
 
