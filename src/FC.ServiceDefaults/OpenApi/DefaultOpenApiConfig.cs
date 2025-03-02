@@ -6,9 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
-using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
-using System.Text.Json.Serialization;
 
 namespace FC.ServiceDefaults.OpenApi;
 
@@ -32,11 +30,11 @@ public static class DefaultOpenApiConfig
             // this will format the version as "'v'major[.minor][-status]"
             apiVersioning.AddApiExplorer(options => options.GroupNameFormat = "'v'VVV");
             services.AddTransient<IConfigureOptions<SwaggerGenOptions>, SwaggerDefaultOptions>();
-            
-            services.AddSwaggerGen(options => 
+
+            services.AddSwaggerGen(options =>
             {
                 options.OperationFilter<OpenApiDefaultValues>();
-                
+
                 // Configuração para usar strings em enums no Swagger
                 options.UseInlineDefinitionsForEnums();
                 options.UseAllOfToExtendReferenceSchemas();

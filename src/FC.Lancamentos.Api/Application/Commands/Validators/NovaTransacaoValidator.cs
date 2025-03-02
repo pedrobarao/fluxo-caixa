@@ -1,5 +1,4 @@
-﻿using FC.Lancamentos.Api.Domain.Entities;
-using FluentValidation;
+﻿using FluentValidation;
 
 namespace FC.Lancamentos.Api.Application.Commands.Validators;
 

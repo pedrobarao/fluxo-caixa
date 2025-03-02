@@ -1,5 +1,3 @@
-using System;
-using System.Linq;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
@@ -15,9 +13,9 @@ public class EnumSchemaFilter : ISchemaFilter
             schema.Enum.Clear();
             schema.Type = "string";
             schema.Format = null;
-            
+
             var enumValues = Enum.GetNames(context.Type);
             schema.Enum = enumValues.Select(name => new OpenApiString(name)).Cast<IOpenApiAny>().ToList();
         }
     }
-} 
+}

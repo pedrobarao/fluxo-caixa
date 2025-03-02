@@ -1,5 +1,4 @@
-﻿using System.Text.Json.Serialization;
-using FC.Core.Communication;
+﻿using FC.Core.Communication;
 using FC.Core.Mediator;
 using FC.Lancamentos.Api.Domain.Entities;
 

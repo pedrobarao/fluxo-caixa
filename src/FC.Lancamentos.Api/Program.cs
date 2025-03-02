@@ -1,5 +1,6 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using FC.Cache;
 using FC.Core.Mediator;
 using FC.Lancamentos.Api.Apis;
 using FC.Lancamentos.Api.Config;
@@ -17,9 +18,10 @@ builder.Services.ConfigureHttpJsonOptions(options =>
 });
 
 builder.Services.AddScoped<IMediatorHandler, MediatorHandler>();
-
+builder.Services.AddRedisCache(builder.Configuration);
 builder.Services.RegisterServices(builder.Configuration);
 builder.Services.AddEndpointsApiExplorer();
+
 var withApiVersioning = builder.Services.AddApiVersioning();
 builder.AddDefaultOpenApiConfig(withApiVersioning);
 

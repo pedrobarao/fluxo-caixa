@@ -16,8 +16,8 @@ public class NovaTransacaoCommandHandler(IMessageBus bus) : IRequestHandler<Nova
         if (validacaoTransacao.IsInvalid)
             return Result.Failure(validacaoTransacao.Errors);
 
-        await bus.Publish(LancamentoRealizadoEvent.Create(transacao), cancellationToken);
-        
+        await bus.Publish(new TransacaoCriadaEvent(transacao), cancellationToken);
+
         return Result.Success();
     }
 }

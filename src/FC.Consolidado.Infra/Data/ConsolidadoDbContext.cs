@@ -1,9 +1,10 @@
 ﻿using FC.Consolidado.Domain.Entities;
+using FC.Core.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace FC.Consolidado.Infra.Data;
 
-public class ConsolidadoDbContext : DbContext
+public sealed class ConsolidadoDbContext : DbContext, IUnitOfWork
 {
     public ConsolidadoDbContext(DbContextOptions<ConsolidadoDbContext> options) : base(options)
     {
@@ -11,7 +12,7 @@ public class ConsolidadoDbContext : DbContext
         ChangeTracker.AutoDetectChangesEnabled = false;
     }
 
-    public DbSet<Transacao> Operacoes { get; set; }
+    public DbSet<Transacao> Transacoes { get; set; }
 
     public async Task<bool> Commit()
     {

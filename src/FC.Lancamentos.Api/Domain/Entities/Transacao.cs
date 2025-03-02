@@ -11,11 +11,13 @@ public class Transacao : Entity, IAggregateRoot
         Valor = valor;
         Descricao = descricao;
         Tipo = tipo;
+        DataHora = DateTime.Now;
     }
 
     public decimal Valor { get; private set; }
     public string Descricao { get; private set; }
     public TipoTransacao Tipo { get; private set; }
+    public DateTime DataHora { get; private set; }
 
     public ValidationResult Validate()
     {

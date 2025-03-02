@@ -14,8 +14,8 @@ public static class DependencyInjectionConfig
         services.AddMediatorHandler(typeof(NovaTransacaoCommand).Assembly);
         services.AddMessageBus(configuration, (context, cfg) =>
         {
-            cfg.Message<LancamentoRealizadoEvent>(x => x.SetEntityName("lancamentos-exchange"));
-            cfg.Publish<LancamentoRealizadoEvent>(x => x.ExchangeType = ExchangeType.Topic);
+            cfg.Message<TransacaoCriadaEvent>(x => x.SetEntityName("lancamentos-exchange"));
+            cfg.Publish<TransacaoCriadaEvent>(x => x.ExchangeType = ExchangeType.Topic);
             cfg.UseMessageRetry(r => { r.Interval(3, TimeSpan.FromSeconds(30)); });
             cfg.UseCircuitBreaker(cb =>
             {

@@ -4,8 +4,10 @@ public abstract record Message
 {
     protected Message()
     {
-        MessageType = GetType().Name;
+        Metadata = new Metadata();
     }
 
-    public string MessageType { get; protected set; }
+    public Guid AggregateId { get; protected set; }
+    public Guid CorrelationId { get; protected set; }
+    public Metadata Metadata { get; init; }
 }
