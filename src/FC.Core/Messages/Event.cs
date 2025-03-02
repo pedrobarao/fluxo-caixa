@@ -2,7 +2,7 @@
 
 namespace FC.Core.Messages;
 
-public abstract class Event : Message, INotification
+public abstract record Event : Message, INotification
 {
     public Guid Id { get; protected set; }
     public Guid AggregateId { get; protected set; }

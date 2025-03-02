@@ -11,12 +11,19 @@ public static class HttpResponseExtensions
         HttpContext context)
     {
         var errorsDictionary =
-            errors.ToDictionary<Error?, string, string[]>(_ => "details", error => [error!.ToString()]);
+            errors.ToDictionary<Error?, string, string[]>(_ => "details", error => [error.ToString()]);
 
+        return InvalidOperation(_, errorsDictionary, context);
+    }
+
+    public static ValidationProblem InvalidOperation(this IResultExtensions _,
+        IDictionary<string, string[]> errors,
+        HttpContext context)
+    {
         return TypedResults.ValidationProblem(type: "https://datatracker.ietf.org/doc/html/rfc7807",
             title: "Erro ao processar a requisição.",
             instance: context.Request.Path,
             detail: "Um ou mais erros ocorreram ao processar a requisição.",
-            errors: errorsDictionary ?? []);
+            errors: errors);
     }
 }

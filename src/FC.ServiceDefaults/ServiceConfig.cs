@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
+using FC.ServiceDefaults.Extensions;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
@@ -39,7 +40,7 @@ public static class ServiceConfig
         //     options.AllowedSchemes = ["https"];
         // });
 
-        builder.Services.Configure<JsonOptions>(options =>
+        builder.Services.ConfigureHttpJsonOptions(options =>
         {
             options.SerializerOptions.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase));
             options.SerializerOptions.PropertyNameCaseInsensitive = true;
@@ -112,6 +113,7 @@ public static class ServiceConfig
         app.UseMetricServer();
         app.UseHttpMetrics();
         app.MapHealthChecksUI();
+        app.UseMiddleware<DefaultExceptionMiddleware>();
 
         return app;
     }

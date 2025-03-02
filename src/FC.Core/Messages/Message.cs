@@ -1,6 +1,6 @@
 ﻿namespace FC.Core.Messages;
 
-public abstract class Message
+public abstract record Message
 {
     protected Message()
     {

@@ -3,7 +3,7 @@ using FC.Lancamentos.Api.Domain.Entities;
 
 namespace FC.Lancamentos.Api.Domain.Events;
 
-public class LancamentoRealizadoEvent : Event
+public record LancamentoRealizadoEvent : Event
 {
     public static LancamentoRealizadoEvent Create(Transacao payload)
     {

@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using FC.Lancamentos.Api.Domain.Entities;
+using FluentValidation;
 
 namespace FC.Lancamentos.Api.Application.Commands.Validators;
 
@@ -14,6 +15,6 @@ public class NovaTransacaoValidator : AbstractValidator<NovaTransacaoCommand>
             .MaximumLength(250).WithMessage("A descrição não pode ter mais que 250 caracteres.");
 
         RuleFor(x => x.Tipo)
-            .NotEmpty().WithMessage("O tipo é obrigatório.");
+            .IsInEnum().WithMessage("O tipo é obrigatório.");
     }
 }

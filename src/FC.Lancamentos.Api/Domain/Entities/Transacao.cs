@@ -17,7 +17,7 @@ public class Transacao : Entity, IAggregateRoot
     public string Descricao { get; private set; }
     public TipoTransacao Tipo { get; private set; }
 
-    public ValidationResult IsValid()
+    public ValidationResult Validate()
     {
         var spec = new OperacaoValorMinimoSpec()
             .And(new OperacaoDescricaoObrigatoriaSpec())

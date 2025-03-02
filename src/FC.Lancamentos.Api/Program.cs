@@ -1,13 +1,20 @@
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using FC.Core.Mediator;
 using FC.Lancamentos.Api.Apis;
 using FC.Lancamentos.Api.Config;
 using FC.ServiceDefaults;
 using FC.ServiceDefaults.OpenApi;
-using FluentValidation;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
+
+builder.Services.ConfigureHttpJsonOptions(options =>
+{
+    options.SerializerOptions.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase));
+    options.SerializerOptions.PropertyNameCaseInsensitive = true;
+});
 
 builder.Services.AddScoped<IMediatorHandler, MediatorHandler>();
 
