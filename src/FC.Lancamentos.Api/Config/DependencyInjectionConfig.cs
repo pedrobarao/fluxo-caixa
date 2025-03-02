@@ -16,7 +16,14 @@ public static class DependencyInjectionConfig
         {
             cfg.Message<LancamentoRealizadoEvent>(x => x.SetEntityName("lancamentos-exchange"));
             cfg.Publish<LancamentoRealizadoEvent>(x => x.ExchangeType = ExchangeType.Topic);
-            cfg.UseMessageRetry(r => r.Immediate(3));
+            cfg.UseMessageRetry(r => { r.Interval(3, TimeSpan.FromSeconds(30)); });
+            cfg.UseCircuitBreaker(cb =>
+            {
+                cb.TrackingPeriod = TimeSpan.FromMinutes(1);
+                cb.TripThreshold = 15;
+                cb.ActiveThreshold = 10;
+                cb.ResetInterval = TimeSpan.FromMinutes(5);
+            });
         });
 
         return services;

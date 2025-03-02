@@ -6,7 +6,7 @@ public static class ConsolidadoApi
 {
     public static RouteGroupBuilder MapConsolicadoApiV1(this IEndpointRouteBuilder app)
     {
-        var api = app.MapGroup("api/relatorio/consolidado").HasApiVersion(1.0);
+        var api = app.MapGroup("api/relatorio/saldo-consolidado").HasApiVersion(1.0);
 
         api.MapPost("/", SaldoConsolidado);
 

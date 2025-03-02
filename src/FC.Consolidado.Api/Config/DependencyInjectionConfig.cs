@@ -28,7 +28,14 @@ public static class DependencyInjectionConfig
                 e.ConfigureConsumers(context);
             });
 
-            cfg.UseMessageRetry(r => { r.Interval(3, TimeSpan.FromMinutes(1)); });
+            cfg.UseMessageRetry(r => { r.Interval(3, TimeSpan.FromSeconds(30)); });
+            cfg.UseCircuitBreaker(cb =>
+            {
+                cb.TrackingPeriod = TimeSpan.FromMinutes(1);
+                cb.TripThreshold = 15;
+                cb.ActiveThreshold = 10;
+                cb.ResetInterval = TimeSpan.FromMinutes(5);
+            });
         });
 
         services.AddStackExchangeRedisCache(options =>
