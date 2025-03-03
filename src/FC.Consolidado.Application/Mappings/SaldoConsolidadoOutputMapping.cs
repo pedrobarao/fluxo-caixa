@@ -1,26 +1,44 @@
-﻿using FC.Consolidado.Application.Outputs;
+﻿using FC.Consolidado.Application.DTOs;
 using FC.Consolidado.Domain.Entities;
 
 namespace FC.Consolidado.Application.Mappings;
 
 public static class SaldoConsolidadoOutputMapping
 {
-    public static SaldoConsolidadoOutput ToOutput(this SaldoConsolidado saldoConsolidado)
+    public static SaldoConsolidadoDto ToDto(this SaldoConsolidado entity)
     {
-        return new SaldoConsolidadoOutput
+        return new SaldoConsolidadoDto
         {
-            Data = saldoConsolidado.Data,
-            SaldoInicial = saldoConsolidado.SaldoInicial,
-            SaldoFinal = saldoConsolidado.SaldoFinal,
-            TotalCreditos = saldoConsolidado.TotalCreditos,
-            TotalDebitos = saldoConsolidado.TotalDebitos,
-            Transacoes = saldoConsolidado.Transacoes.Select(t => new TransacaoOutput
+            Data = entity.Data,
+            SaldoInicial = entity.SaldoInicial,
+            SaldoFinal = entity.SaldoFinal,
+            TotalCreditos = entity.TotalCreditos,
+            TotalDebitos = entity.TotalDebitos,
+            Transacoes = entity.Transacoes.Select(t => new TransacaoDto
             {
+                Id = t.Id,
                 Valor = t.Valor,
                 Descricao = t.Descricao,
                 Tipo = t.Tipo.ToString(),
                 DataHora = t.DataHora
             })
         };
+    }
+
+    public static SaldoConsolidado ToEntity(this SaldoConsolidadoDto dto)
+    {
+        var entity = new SaldoConsolidado(dto.Data);
+        entity.DefinirSaldoInicial(dto.SaldoInicial);
+
+        foreach (var transacaoDto in dto.Transacoes)
+        {
+            entity.AdicionarTransacao(new Transacao(transacaoDto.Id,
+                transacaoDto.Valor,
+                transacaoDto.Descricao,
+                Enum.Parse<TipoTransacao>(transacaoDto.Tipo),
+                transacaoDto.DataHora));
+        }
+
+        return entity;
     }
 }

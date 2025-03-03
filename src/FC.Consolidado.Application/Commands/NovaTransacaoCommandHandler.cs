@@ -1,27 +1,25 @@
 ﻿using FC.Cache;
-using FC.Consolidado.Application.Builders;
+using FC.Consolidado.Application.DTOs;
+using FC.Consolidado.Application.Mappings;
 using FC.Consolidado.Domain.Entities;
 using FC.Consolidado.Domain.Repositories;
 using FC.Core.Communication;
 using FC.Core.Mediator;
-using Microsoft.Extensions.Options;
 
 namespace FC.Consolidado.Application.Commands;
 
 public class NovaTransacaoCommandHandler : IRequestHandler<NovaTransacaoCommand, Result<SaldoConsolidado>>
 {
     private readonly ICacheService _cacheService;
-    private readonly SaldoConsolidadoCacheKeyBuilder _saldoConsolidadoCacheKeyBuilder;
+    private const string DateFormat = "yyyy-MM-dd";
     private readonly ITransacaoRepository _transacaoRepository;
 
     public NovaTransacaoCommandHandler(
         ITransacaoRepository transacaoRepository,
-        ICacheService cacheService,
-        IOptions<RedisCacheOptions> options)
+        ICacheService cacheService)
     {
         _transacaoRepository = transacaoRepository;
         _cacheService = cacheService;
-        _saldoConsolidadoCacheKeyBuilder = new SaldoConsolidadoCacheKeyBuilder(options.Value.InstanceName!);
     }
 
     public async Task<Result<SaldoConsolidado>> Handle(
@@ -55,10 +53,10 @@ public class NovaTransacaoCommandHandler : IRequestHandler<NovaTransacaoCommand,
     private async Task<SaldoConsolidado> RecuperarSaldoConsolidado(DateOnly data)
     {
         var chaveCache = GerarChaveCache(data);
-        var saldoCache = await _cacheService.GetAsync<SaldoConsolidado>(chaveCache);
+        var saldoCache = await _cacheService.GetAsync<SaldoConsolidadoDto>(chaveCache);
 
         if (saldoCache != null)
-            return saldoCache;
+            return saldoCache.ToEntity();
 
         var saldo = new SaldoConsolidado(data);
 
@@ -83,14 +81,12 @@ public class NovaTransacaoCommandHandler : IRequestHandler<NovaTransacaoCommand,
         await PersistirSaldoNoCache(saldoAtual);
     }
 
-    private string GerarChaveCache(DateOnly data)
-    {
-        return _saldoConsolidadoCacheKeyBuilder.BuildKey(data);
-    }
+    private string GerarChaveCache(DateOnly data) => data.ToString(DateFormat);
 
     private async Task PersistirSaldoNoCache(SaldoConsolidado saldo)
     {
-        var chaveCache = GerarChaveCache(saldo.Data);
-        await _cacheService.SetAsync(chaveCache, saldo);
+        var saldoDto = saldo.ToDto();
+        var chaveCache = GerarChaveCache(saldoDto.Data);
+        await _cacheService.SetAsync(chaveCache, saldoDto);
     }
 }

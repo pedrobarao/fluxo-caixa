@@ -1,8 +1,8 @@
-﻿using FC.Consolidado.Application.Outputs;
+﻿using FC.Consolidado.Application.DTOs;
 
 namespace FC.Consolidado.Application.Queries;
 
 public interface ISaldoConsolidadoQuery
 {
-    Task<SaldoConsolidadoOutput> ObterPorData(DateOnly data);
+    Task<SaldoConsolidadoDto> ObterPorData(DateOnly data);
 }

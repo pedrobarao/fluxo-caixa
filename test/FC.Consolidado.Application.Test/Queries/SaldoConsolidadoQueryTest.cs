@@ -1,6 +1,5 @@
 using System.ComponentModel;
 using FC.Cache;
-using FC.Consolidado.Application.Builders;
 using FC.Consolidado.Application.Queries;
 using FC.Consolidado.Domain.Entities;
 using FC.Consolidado.Domain.Repositories;
@@ -29,8 +28,7 @@ public class SaldoConsolidadoQueryTest
 
         _query = new SaldoConsolidadoQuery(
             _transacaoRepositoryMock.Object,
-            _cacheServiceMock.Object,
-            optionsMock.Object);
+            _cacheServiceMock.Object);
     }
 
     [Fact]
@@ -38,6 +36,7 @@ public class SaldoConsolidadoQueryTest
     [DisplayName("Deve retornar saldo do cache quando existir")]
     public async Task ObterPorData_SaldoExisteNoCache_DeveRetornarSaldoDoCache()
     {
+        // Arrange
         var data = DateOnly.FromDateTime(DateTime.Now);
         var saldoEsperado = new SaldoConsolidado(data);
         saldoEsperado.DefinirSaldoInicial(1000m);
@@ -48,15 +47,16 @@ public class SaldoConsolidadoQueryTest
             TipoTransacao.Credito,
             data.ToDateTime(TimeOnly.MinValue)));
 
-        var cacheKeyBuilder = new SaldoConsolidadoCacheKeyBuilder(_redisCacheOptions.InstanceName!);
-        var chave = cacheKeyBuilder.BuildKey(data);
+        var chave = data.ToString("yyyy-MM-dd");
 
         _cacheServiceMock
             .Setup(c => c.GetAsync<SaldoConsolidado>(chave))
             .ReturnsAsync(saldoEsperado);
 
+        // Act
         var resultado = await _query.ObterPorData(data);
 
+        // Assert
         resultado.Should().NotBeNull();
         resultado.Data.Should().Be(data);
         resultado.SaldoInicial.Should().Be(1000m);
@@ -64,12 +64,10 @@ public class SaldoConsolidadoQueryTest
         resultado.TotalDebitos.Should().Be(0m);
         resultado.SaldoFinal.Should().Be(1500m);
 
-        // Verificar que não buscou transações no repositório
         _transacaoRepositoryMock.Verify(
             r => r.ObterTransacoesPorData(It.IsAny<DateOnly>()),
             Times.Never);
 
-        // Verificar que não salvou o saldo no cache
         _cacheServiceMock.Verify(
             c => c.SetAsync(It.IsAny<string>(), It.IsAny<object>(), null),
             Times.Never);
@@ -80,6 +78,7 @@ public class SaldoConsolidadoQueryTest
     [DisplayName("Deve buscar transações no repositório quando saldo não existir no cache")]
     public async Task ObterPorData_SaldoNaoExisteNoCache_DeveBuscarTransacoesNoRepositorio()
     {
+        // Arrange
         var data = DateOnly.FromDateTime(DateTime.Now);
         var transacoes = new List<Transacao>
         {
@@ -87,8 +86,7 @@ public class SaldoConsolidadoQueryTest
             new(Guid.NewGuid(), 50m, "Transação 2", TipoTransacao.Debito, data.ToDateTime(TimeOnly.MinValue))
         };
 
-        var cacheKeyBuilder = new SaldoConsolidadoCacheKeyBuilder(_redisCacheOptions.InstanceName!);
-        var chave = cacheKeyBuilder.BuildKey(data);
+        var chave = data.ToString("yyyy-MM-dd");
 
         _cacheServiceMock
             .Setup(c => c.GetAsync<SaldoConsolidado>(chave))
@@ -102,8 +100,10 @@ public class SaldoConsolidadoQueryTest
             .Setup(c => c.SetAsync(It.IsAny<string>(), It.IsAny<object>(), null))
             .ReturnsAsync(true);
 
+        // Act
         var resultado = await _query.ObterPorData(data);
 
+        // Assert
         resultado.Should().NotBeNull();
         resultado.Data.Should().Be(data);
         resultado.SaldoInicial.Should().Be(0m);
@@ -125,11 +125,11 @@ public class SaldoConsolidadoQueryTest
     [DisplayName("Deve retornar saldo vazio quando não houver transações")]
     public async Task ObterPorData_SemTransacoes_DeveRetornarSaldoVazio()
     {
+        // Arrange
         var data = DateOnly.FromDateTime(DateTime.Now);
         var transacoes = new List<Transacao>();
 
-        var cacheKeyBuilder = new SaldoConsolidadoCacheKeyBuilder(_redisCacheOptions.InstanceName!);
-        var chave = cacheKeyBuilder.BuildKey(data);
+        var chave = data.ToString("yyyy-MM-dd");
 
         _cacheServiceMock
             .Setup(c => c.GetAsync<SaldoConsolidado>(chave))
@@ -143,8 +143,10 @@ public class SaldoConsolidadoQueryTest
             .Setup(c => c.SetAsync(It.IsAny<string>(), It.IsAny<object>(), null))
             .ReturnsAsync(true);
 
+        // Act
         var resultado = await _query.ObterPorData(data);
 
+        // Assert
         resultado.Should().NotBeNull();
         resultado.Data.Should().Be(data);
         resultado.SaldoInicial.Should().Be(0m);

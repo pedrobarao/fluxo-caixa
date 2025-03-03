@@ -1,4 +1,4 @@
-﻿using FC.Consolidado.Application.Outputs;
+﻿using FC.Consolidado.Application.DTOs;
 using FC.Consolidado.Application.Queries;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,14 +8,14 @@ public static class ConsolidadoApi
 {
     public static RouteGroupBuilder MapConsolicadoApiV1(this IEndpointRouteBuilder app)
     {
-        var api = app.MapGroup("api/relatorio/saldo-consolidado").HasApiVersion(1.0);
+        var api = app.MapGroup("api/consolidado").HasApiVersion(1.0);
 
         api.MapGet("/", SaldoConsolidado);
 
         return api;
     }
 
-    private static async Task<SaldoConsolidadoOutput> SaldoConsolidado(DateOnly data,
+    private static async Task<SaldoConsolidadoDto> SaldoConsolidado(DateOnly data,
         [FromServices] ISaldoConsolidadoQuery query)
     {
         return await query.ObterPorData(data);

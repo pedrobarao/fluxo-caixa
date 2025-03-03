@@ -13,12 +13,12 @@ public class SaldoConsolidado
         Transacoes = [];
     }
 
-    public DateOnly Data { get; }
+    public DateOnly Data { get; private set;}
     public decimal SaldoInicial { get; private set; }
     public decimal SaldoFinal => SaldoInicial + TotalCreditos - TotalDebitos;
     public decimal TotalCreditos { get; private set; }
     public decimal TotalDebitos { get; private set; }
-    public List<Transacao> Transacoes { get; }
+    public List<Transacao> Transacoes { get; private set;}
 
     public void AdicionarTransacao(Transacao transacao)
     {
