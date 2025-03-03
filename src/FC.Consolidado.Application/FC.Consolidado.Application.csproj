@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\FC.Cache\FC.Cache.csproj"/>
+        <ProjectReference Include="..\FC.Consolidado.Domain\FC.Consolidado.Domain.csproj"/>
+        <ProjectReference Include="..\FC.MessageBus\FC.MessageBus.csproj"/>
+    </ItemGroup>
+
+</Project>

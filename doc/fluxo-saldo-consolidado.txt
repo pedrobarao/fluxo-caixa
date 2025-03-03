@@ -1,0 +1,12 @@
+flowchart TD
+    A[Interface do Usuário] --> |Solicita o saldo consolidado para uma data informada| B[Valida a solicitação]
+    B --> C{É válida?}
+    C -->|Não| D[Retorna o erro para o usuário]
+    D -->|Sim| E[Consulta no cache se o relatório ja existe]
+    E --> F{Existe?}
+    F -->|Não| G[Busca as transações na base de acordo com a data informada]
+    G --> I[Processa os daos para exibição]
+    I --> J[Persiste os dados no cache]
+    J --> L[Retorna os dados para o usuário]
+    F -->|Sim| H[Busca o relatório no cache]
+    H --> L

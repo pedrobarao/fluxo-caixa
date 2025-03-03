@@ -1,0 +1,405 @@
+{
+  "configuration": {
+    "scope": "SoftwareSystem"
+  },
+  "description": "Sistema de Fluxo de Caixa",
+  "documentation": {},
+  "id": 1,
+  "lastModifiedAgent": "structurizr-ui",
+  "lastModifiedDate": "2025-02-27T10:32:07Z",
+  "model": {
+    "people": [
+      {
+        "id": "1",
+        "location": "Unspecified",
+        "name": "Usuário",
+        "properties": {
+          "structurizr.dsl.identifier": "user"
+        },
+        "relationships": [
+          {
+            "description": "Solicita operações de crédito e débito e visualiza relatórios",
+            "destinationId": "3",
+            "id": "9",
+            "sourceId": "1",
+            "tags": "Relationship",
+            "technology": "HTTPS"
+          },
+          {
+            "description": "Solicita operações de crédito e débito e visualiza relatórios",
+            "destinationId": "2",
+            "id": "10",
+            "linkedRelationshipId": "9",
+            "sourceId": "1",
+            "technology": "HTTPS"
+          }
+        ],
+        "tags": "Element,Person"
+      }
+    ],
+    "softwareSystems": [
+      {
+        "containers": [
+          {
+            "description": "Responsável por entregar o conteúdo estático para o navegador e direcionar chamadas para o os serviços",
+            "documentation": {},
+            "id": "3",
+            "name": "Web App",
+            "properties": {
+              "structurizr.dsl.identifier": "fluxocaixa.webapp"
+            },
+            "relationships": [
+              {
+                "description": "Solicita operações de crédito e débito",
+                "destinationId": "5",
+                "id": "11",
+                "sourceId": "3",
+                "tags": "Relationship",
+                "technology": "gRPC"
+              },
+              {
+                "description": "Solicita relatório de saldo consolidado por período",
+                "destinationId": "6",
+                "id": "12",
+                "sourceId": "3",
+                "tags": "Relationship",
+                "technology": "gRPC"
+              }
+            ],
+            "tags": "Element,Container,WebApp",
+            "technology": "Blazor"
+          },
+          {
+            "description": "Armazena registros de crédito e débito",
+            "documentation": {},
+            "id": "4",
+            "name": "Banco de Dados",
+            "properties": {
+              "structurizr.dsl.identifier": "fluxocaixa.db"
+            },
+            "relationships": [
+              {
+                "description": "Lê registros de crédito e débito",
+                "destinationId": "6",
+                "id": "14",
+                "sourceId": "4",
+                "tags": "Relationship"
+              }
+            ],
+            "tags": "Element,Container,Database",
+            "technology": "PostgreSQL"
+          },
+          {
+            "description": "Processa solicitações de crédito e débito",
+            "documentation": {},
+            "id": "5",
+            "name": "Serviço Controle Lancamentos",
+            "properties": {
+              "structurizr.dsl.identifier": "fluxocaixa.mscontrolelancamentos"
+            },
+            "relationships": [
+              {
+                "description": "Envia eventos de débito e crédito",
+                "destinationId": "7",
+                "id": "15",
+                "sourceId": "5",
+                "tags": "Relationship"
+              }
+            ],
+            "tags": "Element,Container,FluxoCaixaService",
+            "technology": "C# .NET"
+          },
+          {
+            "description": "Processa solicitações de crédito e débito e faz a consolidação do saldo diário",
+            "documentation": {},
+            "id": "6",
+            "name": "Serviço Consolidado Diário",
+            "properties": {
+              "structurizr.dsl.identifier": "fluxocaixa.mssaldoconsolidado"
+            },
+            "relationships": [
+              {
+                "description": "Persiste registros de crédito e débito",
+                "destinationId": "4",
+                "id": "13",
+                "sourceId": "6",
+                "tags": "Relationship"
+              },
+              {
+                "description": "Persiste registros de crédito e débito",
+                "destinationId": "8",
+                "id": "17",
+                "sourceId": "6",
+                "tags": "Relationship"
+              }
+            ],
+            "tags": "Element,Container,SaldoConsolidadoService",
+            "technology": "C# .NET"
+          },
+          {
+            "description": "Recebe eventos de débito e crédito e envia para serviços inscritos",
+            "documentation": {},
+            "id": "7",
+            "name": "Broker",
+            "properties": {
+              "structurizr.dsl.identifier": "fluxocaixa.broker"
+            },
+            "relationships": [
+              {
+                "description": "Recebe eventos de débito e crédito",
+                "destinationId": "6",
+                "id": "16",
+                "sourceId": "7",
+                "tags": "Relationship"
+              }
+            ],
+            "tags": "Element,Container,Broker",
+            "technology": "RabbitMQ"
+          },
+          {
+            "description": "Armazena saldo consolidado dos últimos 30 dias",
+            "documentation": {},
+            "id": "8",
+            "name": "Cache",
+            "properties": {
+              "structurizr.dsl.identifier": "fluxocaixa.cache"
+            },
+            "relationships": [
+              {
+                "description": "Lê registros de crédito e débito",
+                "destinationId": "6",
+                "id": "18",
+                "sourceId": "8",
+                "tags": "Relationship"
+              }
+            ],
+            "tags": "Element,Container,Cache",
+            "technology": "Redis"
+          }
+        ],
+        "documentation": {},
+        "id": "2",
+        "location": "Unspecified",
+        "name": "Fluxo de Caixa",
+        "properties": {
+          "structurizr.dsl.identifier": "fluxocaixa"
+        },
+        "tags": "Element,Software System"
+      }
+    ]
+  },
+  "name": "Fluxo de Caixa",
+  "properties": {
+    "structurizr.dsl": "d29ya3NwYWNlICJGbHV4byBkZSBDYWl4YSIgIlNpc3RlbWEgZGUgRmx1eG8gZGUgQ2FpeGEiIHsKCiAgICAhaWRlbnRpZmllcnMgaGllcmFyY2hpY2FsCgogICAgbW9kZWwgewoJCXVzZXIgPSBwZXJzb24gIlVzdcOhcmlvIgogICAgICAgIAoJCWZsdXhvQ2FpeGEgPSBzb2Z0d2FyZVN5c3RlbSAiRmx1eG8gZGUgQ2FpeGEiIHsKICAgICAgICAgICAgd2ViQXBwID0gY29udGFpbmVyICJXZWIgQXBwIiAiUmVzcG9uc8OhdmVsIHBvciBlbnRyZWdhciBvIGNvbnRlw7pkbyBlc3TDoXRpY28gcGFyYSBvIG5hdmVnYWRvciBlIGRpcmVjaW9uYXIgY2hhbWFkYXMgcGFyYSBvIG9zIHNlcnZpw6dvcyIgIkJsYXpvciIgIldlYkFwcCIgCiAgICAgICAgICAgIAoJCQlkYiA9IGNvbnRhaW5lciAiQmFuY28gZGUgRGFkb3MiICJBcm1hemVuYSByZWdpc3Ryb3MgZGUgY3LDqWRpdG8gZSBkw6liaXRvIiAiUG9zdGdyZVNRTCIgIkRhdGFiYXNlIgoJCQkKCQkJbXNDb250cm9sZUxhbmNhbWVudG9zID0gY29udGFpbmVyICJTZXJ2acOnbyBDb250cm9sZSBMYW5jYW1lbnRvcyIgIlByb2Nlc3NhIHNvbGljaXRhw6fDtWVzIGRlIGNyw6lkaXRvIGUgZMOpYml0byIgIkMjIC5ORVQiICJGbHV4b0NhaXhhU2VydmljZSIKICAgICAgICAgICAgCiAgICAgICAgICAgIG1zU2FsZG9Db25zb2xpZGFkbyA9IGNvbnRhaW5lciAiU2VydmnDp28gQ29uc29saWRhZG8gRGnDoXJpbyIgIlByb2Nlc3NhIHNvbGljaXRhw6fDtWVzIGRlIGNyw6lkaXRvIGUgZMOpYml0byBlIGZheiBhIGNvbnNvbGlkYcOnw6NvIGRvIHNhbGRvIGRpw6FyaW8iICJDIyAuTkVUIiAiU2FsZG9Db25zb2xpZGFkb1NlcnZpY2UiCgoJCQlicm9rZXIgPSBjb250YWluZXIgIkJyb2tlciIgIlJlY2ViZSBldmVudG9zIGRlIGTDqWJpdG8gZSBjcsOpZGl0byBlIGVudmlhIHBhcmEgc2VydmnDp29zIGluc2NyaXRvcyIgIlJhYmJpdE1RIiAiQnJva2VyIgoKICAgICAgICAgICAgY2FjaGUgPSBjb250YWluZXIgIkNhY2hlIiAiQXJtYXplbmEgc2FsZG8gY29uc29saWRhZG8gZG9zIMO6bHRpbW9zIDMwIGRpYXMiICJSZWRpcyIgIkNhY2hlIgogICAgICAgIH0KCQkKICAgICAgICB1c2VyIC0+IGZsdXhvQ2FpeGEud2ViQXBwICJTb2xpY2l0YSBvcGVyYcOnw7VlcyBkZSBjcsOpZGl0byBlIGTDqWJpdG8gZSB2aXN1YWxpemEgcmVsYXTDs3Jpb3MiICJIVFRQUyIKCQkKICAgICAgICBmbHV4b0NhaXhhLndlYkFwcCAtPiBmbHV4b0NhaXhhLm1zQ29udHJvbGVMYW5jYW1lbnRvcyAiU29saWNpdGEgb3BlcmHDp8O1ZXMgZGUgY3LDqWRpdG8gZSBkw6liaXRvIiAiZ1JQQyIKCiAgICAgICAgZmx1eG9DYWl4YS53ZWJBcHAgLT4gZmx1eG9DYWl4YS5tc1NhbGRvQ29uc29saWRhZG8gIlNvbGljaXRhIHJlbGF0w7NyaW8gZGUgc2FsZG8gY29uc29saWRhZG8gcG9yIHBlcsOtb2RvIiAiZ1JQQyIKCgkJZmx1eG9DYWl4YS5tc1NhbGRvQ29uc29saWRhZG8gLT4gZmx1eG9DYWl4YS5kYiAiUGVyc2lzdGUgcmVnaXN0cm9zIGRlIGNyw6lkaXRvIGUgZMOpYml0byIKCiAgICAgICAgZmx1eG9DYWl4YS5kYiAtPiBmbHV4b0NhaXhhLm1zU2FsZG9Db25zb2xpZGFkbyAiTMOqIHJlZ2lzdHJvcyBkZSBjcsOpZGl0byBlIGTDqWJpdG8iCgogICAgICAgIGZsdXhvQ2FpeGEubXNDb250cm9sZUxhbmNhbWVudG9zIC0+IGZsdXhvQ2FpeGEuYnJva2VyICJFbnZpYSBldmVudG9zIGRlIGTDqWJpdG8gZSBjcsOpZGl0byIKCiAgICAgICAgZmx1eG9DYWl4YS5icm9rZXIgLT4gZmx1eG9DYWl4YS5tc1NhbGRvQ29uc29saWRhZG8gIlJlY2ViZSBldmVudG9zIGRlIGTDqWJpdG8gZSBjcsOpZGl0byIKCiAgICAgICAgZmx1eG9DYWl4YS5tc1NhbGRvQ29uc29saWRhZG8gLT4gZmx1eG9DYWl4YS5jYWNoZSAiUGVyc2lzdGUgcmVnaXN0cm9zIGRlIGNyw6lkaXRvIGUgZMOpYml0byIKCiAgICAgICAgZmx1eG9DYWl4YS5jYWNoZSAtPiBmbHV4b0NhaXhhLm1zU2FsZG9Db25zb2xpZGFkbyAiTMOqIHJlZ2lzdHJvcyBkZSBjcsOpZGl0byBlIGTDqWJpdG8iCiAgICB9CgogICAgdmlld3MgewogICAgICAgIHN5c3RlbUNvbnRleHQgZmx1eG9DYWl4YSAiQ29udGV4dG8iIHsKICAgICAgICAgICAgaW5jbHVkZSAqCiAgICAgICAgICAgIGF1dG9sYXlvdXQgbHIKICAgICAgICB9CgogICAgICAgIGNvbnRhaW5lciBmbHV4b0NhaXhhICJDb250YWluZXJzIiB7CiAgICAgICAgICAgIGluY2x1ZGUgKgogICAgICAgICAgICBhdXRvbGF5b3V0IGxyCiAgICAgICAgfQoKICAgICAgICBzdHlsZXMgewogICAgICAgICAgICBlbGVtZW50ICJFbGVtZW50IiB7CiAgICAgICAgICAgICAgICBjb2xvciAjZmZmZmZmCiAgICAgICAgICAgIH0KICAgICAgICAgICAgZWxlbWVudCAiUGVyc29uIiB7CiAgICAgICAgICAgICAgICBiYWNrZ3JvdW5kICM0ODc2RkYKICAgICAgICAgICAgICAgIHNoYXBlIHBlcnNvbgogICAgICAgICAgICB9CiAgICAgICAgICAgIGVsZW1lbnQgIlNvZnR3YXJlIFN5c3RlbSIgewogICAgICAgICAgICAgICAgYmFja2dyb3VuZCAjNDg3NkZGCiAgICAgICAgICAgIH0KICAgICAgICAgICAgZWxlbWVudCAiQ2FjaGUiIHsKICAgICAgICAgICAgICAgIHNoYXBlIGN5bGluZGVyCiAgICAgICAgICAgICAgICBiYWNrZ3JvdW5kICNFRTdBRTkKICAgICAgICAgICAgfQogICAgICAgICAgICBlbGVtZW50ICJEYXRhYmFzZSIgewogICAgICAgICAgICAgICAgc2hhcGUgY3lsaW5kZXIKICAgICAgICAgICAgICAgIGJhY2tncm91bmQgI0VFN0FFOQogICAgICAgICAgICB9CiAgICAgICAgICAgIGVsZW1lbnQgIkJyb2tlciIgewogICAgICAgICAgICAgICAgc2hhcGUgUGlwZQogICAgICAgICAgICAgICAgYmFja2dyb3VuZCAjQzFDRENECiAgICAgICAgICAgIH0KICAgICAgICAgICAgZWxlbWVudCAiRmx1eG9DYWl4YVNlcnZpY2UiIHsKICAgICAgICAgICAgICAgIHNoYXBlIEhleGFnb24KICAgICAgICAgICAgICAgIGJhY2tncm91bmQgIzQzQ0Q4MAogICAgICAgICAgICB9CiAgICAgICAgICAgICBlbGVtZW50ICJTYWxkb0NvbnNvbGlkYWRvU2VydmljZSIgewogICAgICAgICAgICAgICAgc2hhcGUgSGV4YWdvbgogICAgICAgICAgICAgICAgYmFja2dyb3VuZCAjRUU3QUU5CiAgICAgICAgICAgIH0KICAgICAgICAgICAgZWxlbWVudCAiV2ViQXBwIiB7CiAgICAgICAgICAgICAgICBzaGFwZSBXZWJCcm93c2VyCiAgICAgICAgICAgICAgICBiYWNrZ3JvdW5kICMwMEJGRkYKCiAgICAgICAgICAgIH0KICAgICAgICB9CiAgICB9CgogICAgY29uZmlndXJhdGlvbiB7CiAgICAgICAgc2NvcGUgc29mdHdhcmVzeXN0ZW0KICAgIH0KCn0="
+  },
+  "views": {
+    "configuration": {
+      "branding": {},
+      "lastSavedView": "Containers",
+      "metadataSymbols": "SquareBrackets",
+      "styles": {
+        "elements": [
+          {
+            "color": "#ffffff",
+            "tag": "Element"
+          },
+          {
+            "background": "#4876ff",
+            "shape": "Person",
+            "tag": "Person"
+          },
+          {
+            "background": "#4876ff",
+            "tag": "Software System"
+          },
+          {
+            "background": "#ee7ae9",
+            "shape": "Cylinder",
+            "tag": "Cache"
+          },
+          {
+            "background": "#ee7ae9",
+            "shape": "Cylinder",
+            "tag": "Database"
+          },
+          {
+            "background": "#c1cdcd",
+            "shape": "Pipe",
+            "tag": "Broker"
+          },
+          {
+            "background": "#43cd80",
+            "shape": "Hexagon",
+            "tag": "FluxoCaixaService"
+          },
+          {
+            "background": "#ee7ae9",
+            "shape": "Hexagon",
+            "tag": "SaldoConsolidadoService"
+          },
+          {
+            "background": "#00bfff",
+            "shape": "WebBrowser",
+            "tag": "WebApp"
+          }
+        ]
+      },
+      "terminology": {}
+    },
+    "containerViews": [
+      {
+        "automaticLayout": {
+          "applied": true,
+          "edgeSeparation": 0,
+          "implementation": "Graphviz",
+          "nodeSeparation": 300,
+          "rankDirection": "LeftRight",
+          "rankSeparation": 300,
+          "vertices": false
+        },
+        "dimensions": {
+          "height": 1500,
+          "width": 4570
+        },
+        "elements": [
+          {
+            "id": "1",
+            "x": 199,
+            "y": 510
+          },
+          {
+            "id": "3",
+            "x": 899,
+            "y": 560
+          },
+          {
+            "id": "4",
+            "x": 3899,
+            "y": 785
+          },
+          {
+            "id": "5",
+            "x": 1649,
+            "y": 785
+          },
+          {
+            "id": "6",
+            "x": 3149,
+            "y": 560
+          },
+          {
+            "id": "7",
+            "x": 2399,
+            "y": 785
+          },
+          {
+            "id": "8",
+            "x": 3899,
+            "y": 185
+          }
+        ],
+        "externalSoftwareSystemBoundariesVisible": false,
+        "key": "Containers",
+        "order": 2,
+        "relationships": [
+          {
+            "id": "11"
+          },
+          {
+            "id": "12",
+            "vertices": [
+              {
+                "x": 1649,
+                "y": 635
+              },
+              {
+                "x": 2849,
+                "y": 635
+              }
+            ]
+          },
+          {
+            "id": "13",
+            "vertices": [
+              {
+                "x": 3713,
+                "y": 990
+              }
+            ]
+          },
+          {
+            "id": "14",
+            "vertices": [
+              {
+                "x": 3784,
+                "y": 698
+              }
+            ]
+          },
+          {
+            "id": "15"
+          },
+          {
+            "id": "16"
+          },
+          {
+            "id": "17",
+            "vertices": [
+              {
+                "x": 3822,
+                "y": 675
+              }
+            ]
+          },
+          {
+            "id": "18",
+            "vertices": [
+              {
+                "x": 3675,
+                "y": 413
+              }
+            ]
+          },
+          {
+            "id": "9"
+          }
+        ],
+        "softwareSystemId": "2"
+      }
+    ],
+    "systemContextViews": [
+      {
+        "automaticLayout": {
+          "applied": false,
+          "edgeSeparation": 0,
+          "implementation": "Graphviz",
+          "nodeSeparation": 300,
+          "rankDirection": "LeftRight",
+          "rankSeparation": 300,
+          "vertices": false
+        },
+        "elements": [
+          {
+            "id": "1",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "2",
+            "x": 0,
+            "y": 0
+          }
+        ],
+        "enterpriseBoundaryVisible": true,
+        "key": "Contexto",
+        "order": 1,
+        "relationships": [
+          {
+            "id": "10"
+          }
+        ],
+        "softwareSystemId": "2"
+      }
+    ]
+  }
+}

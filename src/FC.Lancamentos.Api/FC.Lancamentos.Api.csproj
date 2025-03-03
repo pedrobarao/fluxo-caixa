@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Asp.Versioning.Http" Version="8.1.0"/>
+        <PackageReference Include="AspNetCore.HealthChecks.Rabbitmq" Version="9.0.0"/>
+        <PackageReference Include="AspNetCore.HealthChecks.Rabbitmq.v6" Version="9.0.0"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\FC.Cache\FC.Cache.csproj"/>
+        <ProjectReference Include="..\FC.Core\FC.Core.csproj"/>
+        <ProjectReference Include="..\FC.MessageBus\FC.MessageBus.csproj"/>
+        <ProjectReference Include="..\FC.ServiceDefaults\FC.ServiceDefaults.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Folder Include="Application\"/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="..\..\.dockerignore">
+        <Link>.dockerignore</Link>
+      </Content>
+    </ItemGroup>
+
+</Project>
