@@ -6,5 +6,5 @@ namespace FC.Consolidado.Domain.Repositories;
 public interface ITransacaoRepository : IRepository<Transacao>
 {
     void Add(Transacao transacao);
-    IAsyncEnumerable<Transacao> ObterTransacoesPorData(DateOnly data);
+    Task<IEnumerable<Transacao>> ObterTransacoesPorData(DateOnly data);
 }

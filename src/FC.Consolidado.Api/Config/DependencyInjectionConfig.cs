@@ -33,19 +33,14 @@ public static class DependencyInjectionConfig
 
     private static void RegisterMessageBus(IServiceCollection services, IConfiguration configuration)
     {
-        services.AddMessageBus(
-            configuration,
-            consumers => { consumers.AddConsumer<TransacaoConsumerService>(); },
+        services.AddMessageBus(configuration,
+            configConsumers => { configConsumers.AddConsumer<TransacaoConsumerService>(); },
             (context, cfg) =>
             {
-                cfg.ReceiveEndpoint("consolidado-queue", e =>
+                cfg.ReceiveEndpoint("transacao-criada-queue", e =>
                 {
-                    e.Bind("lancamentos-exchange", x =>
-                    {
-                        x.ExchangeType = ExchangeType.Topic;
-                    });
-
-                    e.ConfigureConsumers(context);
+                    e.ConfigureConsumer<TransacaoConsumerService>(context);
+                    e.Bind("lancamentos-exchange", x => { x.ExchangeType = ExchangeType.Topic; });
                 });
 
                 cfg.UseMessageRetry(r => { r.Interval(3, TimeSpan.FromSeconds(30)); });
@@ -69,7 +64,6 @@ public static class DependencyInjectionConfig
         services.AddScoped<ITransacaoRepository, TransacaoRepository>();
         services.AddScoped<ISaldoConsolidadoQuery, SaldoConsolidadoQuery>();
     }
-
 
     private static void RegisterDatabase(IServiceCollection services, IConfiguration configuration)
     {

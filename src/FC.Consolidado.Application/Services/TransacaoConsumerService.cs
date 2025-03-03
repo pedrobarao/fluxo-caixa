@@ -1,13 +1,13 @@
 ﻿using FC.Consolidado.Application.Commands;
 using FC.Consolidado.Domain.Entities;
-using FC.Consolidado.Domain.Events;
+using FC.Core.IntegrationEvents;
 using FC.Core.Mediator;
 using MassTransit;
 using Microsoft.Extensions.Logging;
 
 namespace FC.Consolidado.Application.Services;
 
-public class TransacaoConsumerService : MessageBus.IConsumer<TransacaoCriadaEvent>
+public class TransacaoConsumerService : IConsumer<TransacaoCriadaEvent>
 {
     private readonly ILogger<TransacaoConsumerService> _logger;
     private readonly IMediatorHandler _mediator;
@@ -23,6 +23,7 @@ public class TransacaoConsumerService : MessageBus.IConsumer<TransacaoCriadaEven
         try
         {
             _logger.LogInformation("Mensagem recebida: {Message}", context.Message);
+
             await _mediator.Send(GetCommand(context.Message));
         }
         catch (Exception ex)

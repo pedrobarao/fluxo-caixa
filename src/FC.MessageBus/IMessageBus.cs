@@ -1,8 +1,5 @@
-﻿using FC.Core.Messages;
-
-namespace FC.MessageBus;
+﻿namespace FC.MessageBus;
 
 public interface IMessageBus
 {
-    Task Publish<T>(T message, CancellationToken cancellationToken = default) where T : Event;
 }

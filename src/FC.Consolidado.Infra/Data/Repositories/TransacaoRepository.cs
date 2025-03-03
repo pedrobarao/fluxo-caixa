@@ -14,13 +14,14 @@ public sealed class TransacaoRepository(ConsolidadoDbContext context) : ITransac
         context.Transacoes.Add(transacao);
     }
 
-    public async IAsyncEnumerable<Transacao> ObterTransacoesPorData(DateOnly data)
+    public async Task<IEnumerable<Transacao>> ObterTransacoesPorData(DateOnly data)
     {
-        var dataHora = data.ToDateTime(new TimeOnly(0, 0, 0));
+        var dataHora = DateTime.SpecifyKind(
+            data.ToDateTime(new TimeOnly(0, 0, 0)),
+            DateTimeKind.Utc
+        );
 
-        var result = context.Transacoes.Where(e => e.DataHora.Date == dataHora.Date).AsAsyncEnumerable();
-
-        await foreach (var transacao in result) yield return transacao;
+        return await context.Transacoes.Where(e => e.DataHora.Date == dataHora.Date).ToListAsync();
     }
 
     public void Dispose()

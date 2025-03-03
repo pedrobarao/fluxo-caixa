@@ -15,9 +15,9 @@ public static class ConsolidadoApi
         return api;
     }
 
-    private static async IAsyncEnumerable<SaldoConsolidadoOutput> SaldoConsolidado(DateOnly data,
+    private static async Task<SaldoConsolidadoOutput> SaldoConsolidado(DateOnly data,
         [FromServices] ISaldoConsolidadoQuery query)
     {
-        await foreach (var saldo in query.ObterPorData(data)) yield return saldo;
+        return await query.ObterPorData(data);
     }
 }

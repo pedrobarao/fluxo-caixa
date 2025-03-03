@@ -4,5 +4,5 @@ namespace FC.Consolidado.Application.Queries;
 
 public interface ISaldoConsolidadoQuery
 {
-    IAsyncEnumerable<SaldoConsolidadoOutput> ObterPorData(DateOnly data);
+    Task<SaldoConsolidadoOutput> ObterPorData(DateOnly data);
 }

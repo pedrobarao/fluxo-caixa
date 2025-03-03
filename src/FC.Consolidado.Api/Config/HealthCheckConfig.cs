@@ -22,9 +22,9 @@ public static class HealthCheckConfig
                 tags: ["ready"])
             .AddRedis(
                 redisOptions.ConnectionString!,
-                name: "Redis",
-                failureStatus: HealthStatus.Unhealthy,
-                tags: ["ready"]);
+                "Redis",
+                HealthStatus.Unhealthy,
+                ["ready"]);
 
 
         return builder;

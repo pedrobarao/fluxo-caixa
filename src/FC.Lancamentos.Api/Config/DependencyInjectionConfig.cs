@@ -1,6 +1,6 @@
-﻿using FC.Core.Mediator;
+﻿using FC.Core.IntegrationEvents;
+using FC.Core.Mediator;
 using FC.Lancamentos.Api.Application.Commands;
-using FC.Lancamentos.Api.Domain.Events;
 using FC.MessageBus;
 using MassTransit;
 using RabbitMQ.Client;
@@ -26,8 +26,8 @@ public static class DependencyInjectionConfig
     {
         services.AddMessageBus(configuration, customConfig: (context, cfg) =>
         {
-            cfg.Message<TransacaoCriadaEvent>(x => x.SetEntityName("lancamentos-exchange"));
-            cfg.Publish<TransacaoCriadaEvent>(x => x.ExchangeType = ExchangeType.Topic);
+            cfg.Message<TransacaoCriadaEvent>(x => { x.SetEntityName("lancamentos-exchange"); });
+            cfg.Publish<TransacaoCriadaEvent>(x => { x.ExchangeType = ExchangeType.Topic; });
             cfg.UseMessageRetry(r => { r.Interval(3, TimeSpan.FromSeconds(30)); });
             cfg.UseCircuitBreaker(cb =>
             {

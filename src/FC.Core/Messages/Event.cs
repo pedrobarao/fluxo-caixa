@@ -1,7 +1,6 @@
-﻿using FC.Core.Mediator;
+﻿namespace FC.Core.Messages;
 
-namespace FC.Core.Messages;
-
-public abstract record Event : Message, INotification
+public abstract class Event
 {
+    public Guid AggregateId { get; set; }
 }

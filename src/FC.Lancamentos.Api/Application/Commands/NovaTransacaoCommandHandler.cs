@@ -1,12 +1,12 @@
 ﻿using FC.Core.Communication;
+using FC.Core.IntegrationEvents;
 using FC.Core.Mediator;
 using FC.Lancamentos.Api.Domain.Entities;
-using FC.Lancamentos.Api.Domain.Events;
-using FC.MessageBus;
+using MassTransit;
 
 namespace FC.Lancamentos.Api.Application.Commands;
 
-public class NovaTransacaoCommandHandler(IMessageBus bus) : IRequestHandler<NovaTransacaoCommand, Result>
+public class NovaTransacaoCommandHandler(IBus bus) : IRequestHandler<NovaTransacaoCommand, Result>
 {
     public async Task<Result> Handle(NovaTransacaoCommand request, CancellationToken cancellationToken)
     {
@@ -16,7 +16,14 @@ public class NovaTransacaoCommandHandler(IMessageBus bus) : IRequestHandler<Nova
         if (validacaoTransacao.IsInvalid)
             return Result.Failure(validacaoTransacao.Errors);
 
-        await bus.Publish(new TransacaoCriadaEvent(transacao), cancellationToken);
+        await bus.Publish(new TransacaoCriadaEvent
+        {
+            AggregateId = transacao.Id,
+            Descricao = transacao.Descricao,
+            Valor = transacao.Valor,
+            Tipo = transacao.Tipo.ToString(),
+            DataHora = transacao.DataHora
+        }, cancellationToken);
 
         return Result.Success();
     }

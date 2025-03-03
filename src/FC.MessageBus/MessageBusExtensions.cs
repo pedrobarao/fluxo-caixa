@@ -10,7 +10,8 @@ public static class MessageBusExtensions
         this IServiceCollection services,
         IConfiguration configuration,
         Action<IRegistrationConfigurator>? configureConsumers = null,
-        Action<IBusRegistrationContext, IRabbitMqBusFactoryConfigurator>? customConfig = null)
+        Action<IBusRegistrationContext, IRabbitMqBusFactoryConfigurator>? customConfig = null,
+        bool configureEndpointsAutomatically = false)
     {
         services.AddMassTransit(bus =>
         {
@@ -24,9 +25,13 @@ public static class MessageBusExtensions
 
                 cfg.Host(connectionString);
 
+                cfg.UseDelayedRedelivery(r =>
+                    r.Intervals(TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(15), TimeSpan.FromSeconds(30)));
+                cfg.UseMessageRetry(r => r.Immediate(3));
+
                 customConfig?.Invoke(context, cfg);
 
-                cfg.ConfigureEndpoints(context);
+                if (configureEndpointsAutomatically) cfg.ConfigureEndpoints(context);
             });
         });
 
