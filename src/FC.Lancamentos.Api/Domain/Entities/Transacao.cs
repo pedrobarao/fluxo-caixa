@@ -21,9 +21,9 @@ public class Transacao : Entity, IAggregateRoot
 
     public ValidationResult Validate()
     {
-        var spec = new OperacaoValorMinimoSpec()
-            .And(new OperacaoDescricaoObrigatoriaSpec())
-            .And(new OperacaoTipoValidoSpec());
+        var spec = new TransacaoValorMinimoSpec()
+            .And(new TransacaoDescricaoObrigatoriaSpec())
+            .And(new TransacaoTipoValidoSpec());
 
         return spec.Validate(this);
     }

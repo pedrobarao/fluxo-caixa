@@ -26,7 +26,7 @@ public class SaldoConsolidadoQuery : ISaldoConsolidadoQuery
     {
         var saldoConsolidado = await _cache.GetAsync<SaldoConsolidado>(_saldoConsolidadoCacheKeyBuilder.BuildKey(data));
 
-        if (saldoConsolidado != null) saldoConsolidado.ToOutput();
+        if (saldoConsolidado != null) return saldoConsolidado.ToOutput();
 
         var saldoParcial = new SaldoConsolidado(data);
         var transacoes = await _repository.ObterTransacoesPorData(data);

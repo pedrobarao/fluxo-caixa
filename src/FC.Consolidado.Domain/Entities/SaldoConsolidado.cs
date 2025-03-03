@@ -15,7 +15,7 @@ public class SaldoConsolidado
 
     public DateOnly Data { get; }
     public decimal SaldoInicial { get; private set; }
-    public decimal SaldoFinal => TotalCreditos - TotalDebitos;
+    public decimal SaldoFinal => SaldoInicial + TotalCreditos - TotalDebitos;
     public decimal TotalCreditos { get; private set; }
     public decimal TotalDebitos { get; private set; }
     public List<Transacao> Transacoes { get; }
