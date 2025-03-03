@@ -14,11 +14,11 @@ public class TransacaoMapping : IEntityTypeConfiguration<Transacao>
 
         builder.Property(c => c.DataHora)
             .IsRequired()
-            .HasColumnType("datetime");
+            .HasColumnType("timestamptz");
 
         builder.Property(c => c.Descricao)
             .IsRequired()
-            .HasColumnType("nvarchar(250)");
+            .HasColumnType("varchar(250)");
 
         builder.Property(c => c.Tipo)
             .IsRequired()
@@ -26,6 +26,6 @@ public class TransacaoMapping : IEntityTypeConfiguration<Transacao>
 
         builder.Property(c => c.Valor)
             .IsRequired()
-            .HasColumnType("number(21,2)");
+            .HasColumnType("numeric(10,2)");
     }
 }

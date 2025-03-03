@@ -42,7 +42,6 @@ public static class DependencyInjectionConfig
                 {
                     e.Bind("lancamentos-exchange", x =>
                     {
-                        x.RoutingKey = "#";
                         x.ExchangeType = ExchangeType.Topic;
                     });
 
