@@ -7,6 +7,8 @@ using FC.Core.Data;
 using FluentAssertions;
 using Microsoft.Extensions.Options;
 using Moq;
+using FC.Consolidado.Application.DTOs;
+using FC.Consolidado.Application.Mappings;
 
 namespace FC.Consolidado.Application.Test.Commands;
 
@@ -88,8 +90,8 @@ public class NovaTransacaoCommandHandlerTest
         var chaveAtual = dataAtual.ToString("yyyy-MM-dd");
 
         _cacheServiceMock
-            .Setup(c => c.GetAsync<SaldoConsolidado>(It.IsAny<string>()))
-            .ReturnsAsync((SaldoConsolidado?)null);
+            .Setup(c => c.GetAsync<SaldoConsolidadoDto>(It.IsAny<string>()))
+            .ReturnsAsync((SaldoConsolidadoDto?)null);
 
         _transacaoRepositoryMock
             .Setup(r => r.ObterTransacoesPorData(It.IsAny<DateOnly>()))
@@ -142,10 +144,10 @@ public class NovaTransacaoCommandHandlerTest
 
         ConfigurarCacheParaRetornarSaldos(dataAnterior, saldoAnterior, dataAtual, saldoAtual);
 
-        SaldoConsolidado? saldoAtualizado = null;
+        SaldoConsolidadoDto? saldoAtualizado = null;
         _cacheServiceMock
             .Setup(c => c.SetAsync(It.Is<string>(s => s == chaveAtual), It.IsAny<object>(), null))
-            .Callback<string, object, TimeSpan?>((key, saldo, _) => saldoAtualizado = (SaldoConsolidado)saldo)
+            .Callback<string, object, TimeSpan?>((key, saldo, _) => saldoAtualizado = (SaldoConsolidadoDto)saldo)
             .ReturnsAsync(true);
 
         // Act
@@ -193,10 +195,10 @@ public class NovaTransacaoCommandHandlerTest
 
         ConfigurarCacheParaRetornarSaldos(dataAnterior, saldoAnterior, dataAtual, saldoAtual);
 
-        SaldoConsolidado? saldoAtualizado = null;
+        SaldoConsolidadoDto? saldoAtualizado = null;
         _cacheServiceMock
             .Setup(c => c.SetAsync(It.Is<string>(s => s == chaveAtual), It.IsAny<object>(), null))
-            .Callback<string, object, TimeSpan?>((key, saldo, _) => saldoAtualizado = (SaldoConsolidado)saldo)
+            .Callback<string, object, TimeSpan?>((key, saldo, _) => saldoAtualizado = (SaldoConsolidadoDto)saldo)
             .ReturnsAsync(true);
 
         // Act
@@ -248,12 +250,12 @@ public class NovaTransacaoCommandHandlerTest
         var chaveAtual = dataAtual.ToString("yyyy-MM-dd");
 
         _cacheServiceMock
-            .Setup(c => c.GetAsync<SaldoConsolidado>(chaveAnterior))
-            .ReturnsAsync(saldoAnterior);
+            .Setup(c => c.GetAsync<SaldoConsolidadoDto>(chaveAnterior))
+            .ReturnsAsync(saldoAnterior.ToDto());
 
         _cacheServiceMock
-            .Setup(c => c.GetAsync<SaldoConsolidado>(chaveAtual))
-            .ReturnsAsync(saldoAtual);
+            .Setup(c => c.GetAsync<SaldoConsolidadoDto>(chaveAtual))
+            .ReturnsAsync(saldoAtual.ToDto());
     }
 
     private void ConfigurarCacheParaSalvarSaldo()

@@ -1,5 +1,6 @@
 using System.ComponentModel;
 using FC.Cache;
+using FC.Consolidado.Application.DTOs;
 using FC.Consolidado.Application.Queries;
 using FC.Consolidado.Domain.Entities;
 using FC.Consolidado.Domain.Repositories;
@@ -38,20 +39,20 @@ public class SaldoConsolidadoQueryTest
     {
         // Arrange
         var data = DateOnly.FromDateTime(DateTime.Now);
-        var saldoEsperado = new SaldoConsolidado(data);
-        saldoEsperado.DefinirSaldoInicial(1000m);
-        saldoEsperado.AdicionarTransacao(new Transacao(
-            Guid.NewGuid(),
-            500m,
-            "Transação de teste",
-            TipoTransacao.Credito,
-            data.ToDateTime(TimeOnly.MinValue)));
+        var saldoDto = new SaldoConsolidadoDto
+        {
+            Data = data,
+            SaldoInicial = 1000m,
+            TotalCreditos = 500m,
+            TotalDebitos = 0m,
+            SaldoFinal = 1500m
+        };
 
         var chave = data.ToString("yyyy-MM-dd");
 
         _cacheServiceMock
-            .Setup(c => c.GetAsync<SaldoConsolidado>(chave))
-            .ReturnsAsync(saldoEsperado);
+            .Setup(c => c.GetAsync<SaldoConsolidadoDto>(chave))
+            .ReturnsAsync(saldoDto);
 
         // Act
         var resultado = await _query.ObterPorData(data);
@@ -89,8 +90,8 @@ public class SaldoConsolidadoQueryTest
         var chave = data.ToString("yyyy-MM-dd");
 
         _cacheServiceMock
-            .Setup(c => c.GetAsync<SaldoConsolidado>(chave))
-            .ReturnsAsync((SaldoConsolidado?)null);
+            .Setup(c => c.GetAsync<SaldoConsolidadoDto>(chave))
+            .ReturnsAsync((SaldoConsolidadoDto?)null);
 
         _transacaoRepositoryMock
             .Setup(r => r.ObterTransacoesPorData(data))
@@ -116,7 +117,7 @@ public class SaldoConsolidadoQueryTest
             Times.Once);
 
         _cacheServiceMock.Verify(
-            c => c.SetAsync(chave, It.IsAny<SaldoConsolidado>(), null),
+            c => c.SetAsync(chave, It.IsAny<SaldoConsolidadoDto>(), null),
             Times.Once);
     }
 
@@ -132,8 +133,8 @@ public class SaldoConsolidadoQueryTest
         var chave = data.ToString("yyyy-MM-dd");
 
         _cacheServiceMock
-            .Setup(c => c.GetAsync<SaldoConsolidado>(chave))
-            .ReturnsAsync((SaldoConsolidado?)null);
+            .Setup(c => c.GetAsync<SaldoConsolidadoDto>(chave))
+            .ReturnsAsync((SaldoConsolidadoDto?)null);
 
         _transacaoRepositoryMock
             .Setup(r => r.ObterTransacoesPorData(data))
@@ -159,7 +160,7 @@ public class SaldoConsolidadoQueryTest
             Times.Once);
 
         _cacheServiceMock.Verify(
-            c => c.SetAsync(chave, It.IsAny<SaldoConsolidado>(), null),
+            c => c.SetAsync(chave, It.IsAny<SaldoConsolidadoDto>(), null),
             Times.Once);
     }
 }
