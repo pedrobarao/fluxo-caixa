@@ -92,7 +92,7 @@ public class SaldoConsolidadoQueryTest
 
         _cacheServiceMock
             .Setup(c => c.GetAsync<SaldoConsolidado>(chave))
-            .ReturnsAsync((SaldoConsolidado)null);
+            .ReturnsAsync((SaldoConsolidado?)null);
 
         _transacaoRepositoryMock
             .Setup(r => r.ObterTransacoesPorData(data))
@@ -133,7 +133,7 @@ public class SaldoConsolidadoQueryTest
 
         _cacheServiceMock
             .Setup(c => c.GetAsync<SaldoConsolidado>(chave))
-            .ReturnsAsync((SaldoConsolidado)null);
+            .ReturnsAsync((SaldoConsolidado?)null);
 
         _transacaoRepositoryMock
             .Setup(r => r.ObterTransacoesPorData(data))

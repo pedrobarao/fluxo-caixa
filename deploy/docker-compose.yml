@@ -1,4 +1,4 @@
-services:  
+services:
   lancamentos-api:
     container_name: lancamentos-api
     depends_on:

@@ -23,4 +23,7 @@ app.UseDefaultOpenApiConfig();
 
 app.UseHttpsRedirection();
 
+// Executa os migrations de banco de dados
+app.ApplyMigrations();
+
 app.Run();

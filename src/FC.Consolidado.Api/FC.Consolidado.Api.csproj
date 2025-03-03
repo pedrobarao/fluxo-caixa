@@ -8,12 +8,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Content Include="..\..\.dockerignore">
-            <Link>.dockerignore</Link>
-        </Content>
-    </ItemGroup>
-
-    <ItemGroup>
         <PackageReference Include="AspNetCore.HealthChecks.NpgSql" Version="9.0.0"/>
         <PackageReference Include="AspNetCore.HealthChecks.Redis" Version="9.0.0"/>
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.2">
@@ -22,6 +16,7 @@
         </PackageReference>
         <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="9.0.2"/>
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4"/>
+        <PackageReference Include="Polly" Version="8.5.2"/>
     </ItemGroup>
 
     <ItemGroup>
@@ -29,6 +24,12 @@
         <ProjectReference Include="..\FC.Consolidado.Infra\FC.Consolidado.Infra.csproj"/>
         <ProjectReference Include="..\FC.MessageBus\FC.MessageBus.csproj"/>
         <ProjectReference Include="..\FC.ServiceDefaults\FC.ServiceDefaults.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="..\..\.dockerignore">
+        <Link>.dockerignore</Link>
+      </Content>
     </ItemGroup>
 
 </Project>

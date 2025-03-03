@@ -109,7 +109,7 @@ public class NovaTransacaoCommandHandlerTest
         // Configurar cache para retornar null (saldo não existe)
         _cacheServiceMock
             .Setup(c => c.GetAsync<SaldoConsolidado>(It.IsAny<string>()))
-            .ReturnsAsync((SaldoConsolidado)null);
+            .ReturnsAsync((SaldoConsolidado?)null);
 
         // Configurar repositório para retornar lista vazia de transações
         _transacaoRepositoryMock
@@ -178,7 +178,7 @@ public class NovaTransacaoCommandHandlerTest
         ConfigurarCacheParaRetornarSaldos(chaveAnterior, saldoAnterior, chaveAtual, saldoAtual);
 
         // Capturar o saldo atualizado que será salvo no cache
-        SaldoConsolidado saldoAtualizado = null;
+        SaldoConsolidado? saldoAtualizado = null;
         _cacheServiceMock
             .Setup(c => c.SetAsync(It.Is<string>(s => s == chaveAtual), It.IsAny<object>(), null))
             .Callback<string, object, TimeSpan?>((key, saldo, _) => saldoAtualizado = (SaldoConsolidado)saldo)
@@ -192,7 +192,7 @@ public class NovaTransacaoCommandHandlerTest
         saldoAtualizado.Should().NotBeNull("o saldo deve ser atualizado no cache");
 
         // Verificar saldo inicial
-        saldoAtualizado.SaldoInicial.Should().Be(saldoFinalAnterior,
+        saldoAtualizado!.SaldoInicial.Should().Be(saldoFinalAnterior,
             "o saldo inicial deve ser igual ao saldo final do dia anterior");
 
         // Verificar total de créditos
@@ -254,7 +254,7 @@ public class NovaTransacaoCommandHandlerTest
         ConfigurarCacheParaRetornarSaldos(chaveAnterior, saldoAnterior, chaveAtual, saldoAtual);
 
         // Capturar o saldo atualizado que será salvo no cache
-        SaldoConsolidado saldoAtualizado = null;
+        SaldoConsolidado? saldoAtualizado = null;
         _cacheServiceMock
             .Setup(c => c.SetAsync(It.Is<string>(s => s == chaveAtual), It.IsAny<object>(), null))
             .Callback<string, object, TimeSpan?>((key, saldo, _) => saldoAtualizado = (SaldoConsolidado)saldo)
@@ -268,7 +268,7 @@ public class NovaTransacaoCommandHandlerTest
         saldoAtualizado.Should().NotBeNull("o saldo deve ser atualizado no cache");
 
         // Verificar saldo inicial
-        saldoAtualizado.SaldoInicial.Should().Be(saldoFinalAnterior,
+        saldoAtualizado!.SaldoInicial.Should().Be(saldoFinalAnterior,
             "o saldo inicial deve ser igual ao saldo final do dia anterior");
 
         // Verificar total de débitos

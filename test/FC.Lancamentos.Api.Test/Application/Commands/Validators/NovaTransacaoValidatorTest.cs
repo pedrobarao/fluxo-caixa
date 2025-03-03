@@ -109,7 +109,7 @@ public class NovaTransacaoValidatorTest
         var command = new NovaTransacaoCommand
         {
             Valor = 100.00m,
-            Descricao = null,
+            Descricao = null!,
             Tipo = TipoTransacao.Credito
         };
 

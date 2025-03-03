@@ -54,32 +54,32 @@ public static class DefaultOpenApiConfig
 
         app.UseSwagger();
 
-        if (app.Environment.IsDevelopment())
+        // if (app.Environment.IsDevelopment())
+        // {
+        app.UseSwaggerUI(setup =>
         {
-            app.UseSwaggerUI(setup =>
+            var pathBase = configuration["PATH_BASE"] ?? string.Empty;
+            var authSection = openApiSection.GetSection("Auth");
+            var endpointSection = openApiSection.GetRequiredSection("Endpoint");
+
+            foreach (var description in app.DescribeApiVersions())
             {
-                var pathBase = configuration["PATH_BASE"] ?? string.Empty;
-                var authSection = openApiSection.GetSection("Auth");
-                var endpointSection = openApiSection.GetRequiredSection("Endpoint");
+                var name = description.GroupName;
+                var url = endpointSection["Url"] ?? $"{pathBase}/swagger/{name}/swagger.json";
 
-                foreach (var description in app.DescribeApiVersions())
-                {
-                    var name = description.GroupName;
-                    var url = endpointSection["Url"] ?? $"{pathBase}/swagger/{name}/swagger.json";
+                setup.SwaggerEndpoint(url, name);
+            }
 
-                    setup.SwaggerEndpoint(url, name);
-                }
+            if (authSection.Exists())
+            {
+                setup.OAuthClientId(authSection.GetRequiredValue("ClientId"));
+                setup.OAuthAppName(authSection.GetRequiredValue("AppName"));
+            }
+        });
 
-                if (authSection.Exists())
-                {
-                    setup.OAuthClientId(authSection.GetRequiredValue("ClientId"));
-                    setup.OAuthAppName(authSection.GetRequiredValue("AppName"));
-                }
-            });
-
-            // Add a redirect from the root of the app to the swagger endpoint
-            app.MapGet("/", () => Results.Redirect("/swagger")).ExcludeFromDescription();
-        }
+        // Add a redirect from the root of the app to the swagger endpoint
+        app.MapGet("/", () => Results.Redirect("/swagger")).ExcludeFromDescription();
+        // }
 
         return app;
     }
