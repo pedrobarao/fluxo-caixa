@@ -11,8 +11,20 @@ public static class DependencyInjectionConfig
 {
     public static IServiceCollection RegisterServices(this IServiceCollection services, IConfiguration configuration)
     {
+        RegisterMediatorHandler(services);
+        RegisterMessageBus(services, configuration);
+
+        return services;
+    }
+
+    private static void RegisterMediatorHandler(IServiceCollection services)
+    {
         services.AddMediatorHandler(typeof(NovaTransacaoCommand).Assembly);
-        services.AddMessageBus(configuration, (context, cfg) =>
+    }
+
+    private static void RegisterMessageBus(IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddMessageBus(configuration, customConfig: (context, cfg) =>
         {
             cfg.Message<TransacaoCriadaEvent>(x => x.SetEntityName("lancamentos-exchange"));
             cfg.Publish<TransacaoCriadaEvent>(x => x.ExchangeType = ExchangeType.Topic);
@@ -25,7 +37,5 @@ public static class DependencyInjectionConfig
                 cb.ResetInterval = TimeSpan.FromMinutes(5);
             });
         });
-
-        return services;
     }
 }

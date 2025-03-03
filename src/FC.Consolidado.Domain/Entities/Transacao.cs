@@ -18,7 +18,7 @@ public class Transacao : Entity, IAggregateRoot
     }
 
     public decimal Valor { get; private set; }
-    public string Descricao { get; private set; }
+    public string Descricao { get; private set; } = null!;
     public TipoTransacao Tipo { get; private set; }
     public DateTime DataHora { get; private set; }
 }

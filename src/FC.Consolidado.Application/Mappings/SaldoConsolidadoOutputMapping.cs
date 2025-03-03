@@ -1,5 +1,4 @@
 ﻿using FC.Consolidado.Application.Outputs;
-using FC.Consolidado.Application.Responses;
 using FC.Consolidado.Domain.Entities;
 
 namespace FC.Consolidado.Application.Mappings;

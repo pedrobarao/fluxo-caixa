@@ -22,13 +22,26 @@ public class SaldoConsolidadoQuery : ISaldoConsolidadoQuery
         _saldoConsolidadoCacheKeyBuilder = new SaldoConsolidadoCacheKeyBuilder(options.Value.InstanceName!);
     }
 
-    public async Task<SaldoConsolidadoOutput> ObterPorData(DateTime data)
+    public async IAsyncEnumerable<SaldoConsolidadoOutput> ObterPorData(DateOnly data)
     {
         var saldoConsolidado = await _cache.GetAsync<SaldoConsolidado>(_saldoConsolidadoCacheKeyBuilder.BuildKey(data));
-        if (saldoConsolidado != null) return saldoConsolidado.ToOutput();
 
-        var transacoes = await _repository.ObterTransacoesPorData(data);
+        if (saldoConsolidado != null)
+        {
+            yield return saldoConsolidado.ToOutput();
+            yield break;
+        }
 
-        return new SaldoConsolidado(data, transacoes).ToOutput();
+        var saldoParcial = new SaldoConsolidado(data);
+
+        await foreach (var transacao in _repository.ObterTransacoesPorData(data))
+        {
+            saldoParcial.AdicionarTransacao(transacao);
+            yield return saldoParcial.ToOutput();
+        }
+
+        await _cache.SetAsync(
+            _saldoConsolidadoCacheKeyBuilder.BuildKey(data),
+            saldoParcial);
     }
 }

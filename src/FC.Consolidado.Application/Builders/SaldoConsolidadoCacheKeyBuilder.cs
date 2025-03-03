@@ -10,7 +10,7 @@ public class SaldoConsolidadoCacheKeyBuilder
         _instanceName = instanceName;
     }
 
-    public string BuildKey(DateTime chave)
+    public string BuildKey(DateOnly chave)
     {
         return $"{_instanceName}:{chave.ToString(DateFormat)}";
     }

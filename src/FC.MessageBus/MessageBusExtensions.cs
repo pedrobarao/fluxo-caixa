@@ -9,10 +9,13 @@ public static class MessageBusExtensions
     public static IServiceCollection AddMessageBus(
         this IServiceCollection services,
         IConfiguration configuration,
-        Action<IBusRegistrationContext, IRabbitMqBusFactoryConfigurator> customConfig)
+        Action<IRegistrationConfigurator>? configureConsumers = null,
+        Action<IBusRegistrationContext, IRabbitMqBusFactoryConfigurator>? customConfig = null)
     {
-        _ = services.AddMassTransit(bus =>
+        services.AddMassTransit(bus =>
         {
+            configureConsumers?.Invoke(bus);
+
             bus.UsingRabbitMq((context, cfg) =>
             {
                 var connectionString = configuration.GetConnectionString("RabbitMQ")

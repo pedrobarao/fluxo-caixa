@@ -7,9 +7,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\FC.Cache\FC.Cache.csproj" />
-      <ProjectReference Include="..\FC.Consolidado.Domain\FC.Consolidado.Domain.csproj" />
-      <ProjectReference Include="..\FC.MessageBus\FC.MessageBus.csproj" />
+        <ProjectReference Include="..\FC.Cache\FC.Cache.csproj"/>
+        <ProjectReference Include="..\FC.Consolidado.Domain\FC.Consolidado.Domain.csproj"/>
+        <ProjectReference Include="..\FC.MessageBus\FC.MessageBus.csproj"/>
     </ItemGroup>
 
 </Project>

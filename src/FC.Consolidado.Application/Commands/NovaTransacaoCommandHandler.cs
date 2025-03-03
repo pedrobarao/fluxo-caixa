@@ -35,22 +35,25 @@ public class NovaTransacaoCommandHandler : IRequestHandler<NovaTransacaoCommand,
             request.Tipo,
             request.DataHora);
 
-        var saldoConsolidado = await ProcessarSaldoConsolidado(transacao);
+        var saldoConsolidado = await ProcessarSaldoConsolidado(transacao, cancellationToken);
 
         return Result.Success(saldoConsolidado);
     }
 
-    private async Task<SaldoConsolidado> ProcessarSaldoConsolidado(Transacao transacao)
+    private async Task<SaldoConsolidado> ProcessarSaldoConsolidado(Transacao transacao,
+        CancellationToken cancellationToken)
     {
-        var saldoAnterior = await RecuperarSaldoConsolidado(transacao.DataHora.AddDays(-1));
-        var saldoAtual = await RecuperarSaldoConsolidado(transacao.DataHora);
+        var data = DateOnly.FromDateTime(transacao.DataHora);
+
+        var saldoAnterior = await RecuperarSaldoConsolidado(data.AddDays(-1), cancellationToken);
+        var saldoAtual = await RecuperarSaldoConsolidado(data, cancellationToken);
 
         await AtualizarSaldoConsolidado(saldoAtual, saldoAnterior, transacao);
 
         return saldoAtual;
     }
 
-    private async Task<SaldoConsolidado> RecuperarSaldoConsolidado(DateTime data)
+    private async Task<SaldoConsolidado> RecuperarSaldoConsolidado(DateOnly data, CancellationToken cancellationToken)
     {
         var chaveCache = GerarChaveCache(data);
         var saldoCache = await _cacheService.GetAsync<SaldoConsolidado>(chaveCache);
@@ -58,11 +61,14 @@ public class NovaTransacaoCommandHandler : IRequestHandler<NovaTransacaoCommand,
         if (saldoCache != null)
             return saldoCache;
 
-        var transacoes = await _transacaoRepository.ObterTransacoesPorData(data.AddDays(-1));
-        var novoSaldo = new SaldoConsolidado(data, transacoes);
+        var saldo = new SaldoConsolidado(data);
 
-        await _cacheService.SetAsync(chaveCache, novoSaldo);
-        return novoSaldo;
+        await foreach (var transacao in _transacaoRepository.ObterTransacoesPorData(data)
+                           .WithCancellation(cancellationToken))
+            saldo.AdicionarTransacao(transacao);
+
+        await _cacheService.SetAsync(chaveCache, saldo);
+        return saldo;
     }
 
     private async Task AtualizarSaldoConsolidado(
@@ -76,7 +82,7 @@ public class NovaTransacaoCommandHandler : IRequestHandler<NovaTransacaoCommand,
         await PersistirSaldoNoCache(saldoAtual);
     }
 
-    private string GerarChaveCache(DateTime data)
+    private string GerarChaveCache(DateOnly data)
     {
         return _saldoConsolidadoCacheKeyBuilder.BuildKey(data);
     }

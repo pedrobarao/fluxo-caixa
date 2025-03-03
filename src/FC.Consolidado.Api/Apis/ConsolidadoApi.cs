@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
+﻿using FC.Consolidado.Application.Outputs;
+using FC.Consolidado.Application.Queries;
+using Microsoft.AspNetCore.Mvc;
 
 namespace FC.Consolidado.Api.Apis;
 
@@ -8,13 +10,14 @@ public static class ConsolidadoApi
     {
         var api = app.MapGroup("api/relatorio/saldo-consolidado").HasApiVersion(1.0);
 
-        api.MapPost("/", SaldoConsolidado);
+        api.MapGet("/", SaldoConsolidado);
 
         return api;
     }
 
-    private static async Task<Results<Created, ValidationProblem>> SaldoConsolidado(HttpContext context, DateOnly data)
+    private static async IAsyncEnumerable<SaldoConsolidadoOutput> SaldoConsolidado(DateOnly data,
+        [FromServices] ISaldoConsolidadoQuery query)
     {
-        return TypedResults.Created();
+        await foreach (var saldo in query.ObterPorData(data)) yield return saldo;
     }
 }

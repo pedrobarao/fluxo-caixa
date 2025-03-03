@@ -6,11 +6,11 @@ using FC.ServiceDefaults.OpenApi;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
-
 builder.Services.RegisterServices(builder.Configuration);
 builder.Services.AddEndpointsApiExplorer();
 var withApiVersioning = builder.Services.AddApiVersioning();
 builder.AddDefaultOpenApiConfig(withApiVersioning);
+builder.AddHealthCheckConfig();
 
 var app = builder.Build();
 
