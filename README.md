@@ -123,7 +123,7 @@ Requer registro abrangente, monitoramento e rastreamento para entender o estado 
 
 ## Registro de transação
 
-![structurizr-1-Containers.png](doc/fluxo-transacao.png)
+[//]: # (![structurizr-1-Containers.png]&#40;doc/fluxo-transacao.png&#41;)
 
 ```mermaid
 flowchart TD
@@ -139,7 +139,7 @@ flowchart TD
 
 ## Consulta do saldo consolidado
 
-![structurizr-1-Containers.png](doc/fluxo-saldo-consolidado.png)
+[//]: # (![structurizr-1-Containers.png]&#40;doc/fluxo-saldo-consolidado.png&#41;)
 
 ```mermaid
 flowchart TD
