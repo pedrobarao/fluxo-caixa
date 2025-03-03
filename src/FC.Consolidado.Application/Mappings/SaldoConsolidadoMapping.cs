@@ -3,7 +3,7 @@ using FC.Consolidado.Domain.Entities;
 
 namespace FC.Consolidado.Application.Mappings;
 
-public static class SaldoConsolidadoOutputMapping
+public static class SaldoConsolidadoMapping
 {
     public static SaldoConsolidadoDto ToDto(this SaldoConsolidado entity)
     {

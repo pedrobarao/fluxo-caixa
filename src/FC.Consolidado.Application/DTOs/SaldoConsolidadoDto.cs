@@ -1,6 +1,4 @@
-﻿using FC.Consolidado.Domain.Entities;
-
-namespace FC.Consolidado.Application.DTOs;
+﻿namespace FC.Consolidado.Application.DTOs;
 
 public class SaldoConsolidadoDto
 {
